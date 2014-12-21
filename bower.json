@@ -1,0 +1,15 @@
+{
+  "name": "vagaz",
+  "version": "0.0.1",
+  "ignore": [
+    ".gitignore",
+    "**/*.md"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "angularjs": "~1.3.8",
+    "semantic": "~1.3.2",
+    "angular-semantic-ui": "https://github.com/angularify/angular-semantic-ui.git#master",
+    "angular-sanitize": "~1.3.8"
+  }
+}

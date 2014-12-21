@@ -1,0 +1,84 @@
+<!doctype html>
+<html ng-app="mainApp">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- build:css styles/styles.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="../bower_components/semantic/dist/semantic.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <title>Vagaz</title>
+</head>
+<body>
+    <h4 class="ui inverted black block header">Vagaz</span></h4>
+
+    <div class="ui top attached tabular menu">
+        <a class="active item transactions" onclick="changeTab('vagas')">Vagas</a>
+        <a class="item charts" onclick="changeTab('charts')">Gr&aacute;ficos</a>
+    </div>
+
+    <div class="ui bottom attached tab active segment vagas" ng-controller="MainCtrl">
+        <div class="ui stackable grid">
+            <div class="ui form sixteen wide column ng-class: {loading: isLoading}">
+                <h4 class="ui block top attached header">Filtro</h4>
+                <div class="ui bottom attached secondary segment">
+                    <div class="ui one fields">
+                        <div class="field">
+                            <div class="inline fields">
+                                <label style="width:60px">Empresa</label>
+                                <div class="field">
+                                    <select ng-model="filterOptions.empresa">
+                                        <option ng-repeat="j in jobs" value="{{j.nome}}">{{j.nome}}</option>
+                                    </select>
+                                </div>
+                                <button class="ui button mini primary" ng-click="filtrarPorEmpresa()">Ok</button>
+                            </div>
+                            <div class="inline fields">
+                                <label style="width:60px">Cargo</label>
+                                <div class="field" style="width:60%">
+                                    <select ng-model="filterOptions.titulo" ng-options="c for c in cargos"></select>
+                                </div>
+                                <button class="ui button mini primary" ng-click="filtrarPorCargo()">Ok</button>
+                            </div>
+                            <div class="inline fields">
+                                <label style="width:60px">Local</label>
+                                <div class="field">
+                                    <select ng-model="filterOptions.local" ng-options="l for l in localidades"></select>
+                                </div>
+                                <button class="ui button mini primary" ng-click="filtrarPorLocal()">Ok</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table class="ui celled striped large table segment" ng-repeat="r in resultadosFiltro track by r.nome">
+            <thead>
+                <tr>
+                    <th colspan="2">{{r.nome}}</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="v in r.vagas track by v.url">
+                    <td><a href="http://www.vagas.com.br{{v.url}}" target="_blank">{{v.titulo}}</a></td>
+                    <td class="collapsing right aligned">{{v.local}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- build:js script.js -->
+    <!-- bower:js -->
+    <script src="../bower_components/angularjs/angular.js"></script>
+    <!-- endbower -->
+    <script src="scripts/util-service.js"></script>
+    <script src="scripts/app.js"></script>
+    <!-- endbuild -->
+</body>
+</html>
