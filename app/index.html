@@ -9,6 +9,7 @@
     <!-- bower:css -->
     <link rel="stylesheet" href="../bower_components/semantic/dist/semantic.css" />
     <!-- endbower -->
+    <link rel="stylesheet" href="styles/angucomplete.css" />
     <!-- endbuild -->
 
     <title>Vagaz</title>
@@ -18,7 +19,6 @@
 
     <div class="ui top attached tabular menu">
         <a class="active item transactions" onclick="changeTab('vagas')">Vagas</a>
-        <a class="item charts" onclick="changeTab('charts')">Gr&aacute;ficos</a>
     </div>
 
     <div class="ui bottom attached tab active segment vagas" ng-controller="MainCtrl">
@@ -26,34 +26,63 @@
             <div class="ui form sixteen wide column ng-class: {loading: isLoading}">
                 <h4 class="ui block top attached header">Filtro</h4>
                 <div class="ui bottom attached secondary segment">
-                    <div class="ui one fields">
                         <div class="field">
                             <div class="inline fields">
-                                <label style="width:60px">Empresa</label>
                                 <div class="field">
-                                    <select ng-model="filterOptions.empresa">
-                                        <option ng-repeat="j in jobs" value="{{j.nome}}">{{j.nome}}</option>
-                                    </select>
+                                    <div class="ui radio checkbox">
+                                        <input id="radFiltroEmpresa" name="tipoFiltro" type="radio" value="empresa" ng-model="filtro.campo">
+                                        <label for="radFiltroEmpresa" style="width:100px">Empresa</label>
+                                    </div>
+                                    <div class="ui radio checkbox">
+                                        <input id="radFiltroCargo" name="tipoFiltro" type="radio" value="titulo" ng-model="filtro.campo">
+                                        <label for="radFiltroCargo" style="width:100px">Cargo</label>
+                                    </div>
+                                    <div class="ui radio checkbox">
+                                        <input id="radFiltroLocal" name="tipoFiltro" type="radio" value="local" ng-model="filtro.campo">
+                                        <label for="radFiltroLocal" style="width:100px">Cidade</label>
+                                    </div>
                                 </div>
-                                <button class="ui button mini primary" ng-click="filtrarPorEmpresa()">Ok</button>
-                            </div>
-                            <div class="inline fields">
-                                <label style="width:60px">Cargo</label>
-                                <div class="field" style="width:60%">
-                                    <select ng-model="filterOptions.titulo" ng-options="c for c in cargos"></select>
-                                </div>
-                                <button class="ui button mini primary" ng-click="filtrarPorCargo()">Ok</button>
-                            </div>
-                            <div class="inline fields">
-                                <label style="width:60px">Local</label>
-                                <div class="field">
-                                    <select ng-model="filterOptions.local" ng-options="l for l in localidades"></select>
-                                </div>
-                                <button class="ui button mini primary" ng-click="filtrarPorLocal()">Ok</button>
                             </div>
                         </div>
+
+                        <div class="field" ng-show="'empresa' === filtro.campo">
+                            <angucomplete id="txtEmpresa"
+                              placeholder="Nome da empresa"
+                              pause="100"
+                              selectedobject="filtro.empresa"
+                              localdata="jobs"
+                              searchfields="nome"
+                              titlefield="nome"
+                              minlength="1"
+                              inputclass=""/>
+                        </div>
+                        <div class="field"ng-show="'titulo' === filtro.campo">
+                            <angucomplete id="txtCargo"
+                              placeholder="Cargo"
+                              pause="100"
+                              selectedobject="filtro.titulo"
+                              localdata="cargos"
+                              searchfields="titulo"
+                              titlefield="titulo"
+                              minlength="1"
+                              inputclass=""/>
+                        </div>
+                        <div class="field" ng-show="'local' === filtro.campo">
+                            <angucomplete id="txtCidade"
+                              placeholder="Cidade"
+                              pause="100"
+                              selectedobject="filtro.local"
+                              localdata="cidades"
+                              searchfields="nome"
+                              titlefield="nome"
+                              minlength="1"
+                              inputclass=""/>
+                            
+                        </div>
                         
-                    </div>
+                        <div class="field" ng-show="filtro.campo.length > 0">
+                            <button class="ui button large primary" ng-click="filtrar()">Filtrar</button>
+                        </div>
                 </div>
             </div>
         </div>
@@ -61,7 +90,12 @@
         <table class="ui celled striped large table segment" ng-repeat="r in resultadosFiltro track by r.nome">
             <thead>
                 <tr>
-                    <th colspan="2">{{r.nome}}</th> 
+                    <th colspan="2">
+                        <span class="item" style="font-size: 1.5rem; font-weight: normal">
+                            {{r.nome}}
+                        </span>
+                         - {{r.totalVagas}} vaga(s)
+                    </th> 
                 </tr>
             </thead>
             <tbody>
@@ -76,6 +110,7 @@
     <!-- build:js script.js -->
     <!-- bower:js -->
     <script src="../bower_components/angularjs/angular.js"></script>
+    <script src="../bower_components/angucomplete/angucomplete.js"></script>
     <!-- endbower -->
     <script src="scripts/util-service.js"></script>
     <script src="scripts/app.js"></script>

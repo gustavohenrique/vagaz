@@ -58,7 +58,8 @@ class Vagas(object):
                     'nome': a.attrs.get('title'),
                     'url': url,
                     'imagem': imagem_url,
-                    'vagas': vagas
+                    'vagas': vagas,
+                    'totalVagas': len(vagas)
                 }
                 empresas.append(empresa)
 

@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    var app = angular.module('mainApp', ['utilApp']);
+    var app = angular.module('mainApp', ['utilApp', 'angucomplete']);
 
     app.service('mainService', ['$http', function ($http) {
         this.load = function (success, error) {
@@ -13,13 +13,19 @@
         
         $scope.isLoading = true;
         
-        $scope.filterOptions = {
+        $scope.resultadosFiltro = [];
+        
+        $scope.filtro = {
+            campo: '',
             empresa: '',
             titulo: '',
             local: ''
         };
-        $scope.resultadosFiltro = [];
-        
+
+        $scope.$watch('filtro.campo', function (newValue, oldValue) {
+            $scope.resultadosFiltro = [];
+        });
+
         mainService.load(function (data) {
             $scope.jobs = [];
             var titulos = [],
@@ -56,10 +62,23 @@
                 return 0;
             };
             titulos.sort(alphabetical);
+            var cargos = [];
+            for (var c = 0; c < titulos.length; c++) {
+                cargos.push({
+                    titulo: titulos[c]
+                });
+            }
+
             localidades.sort(alphabetical);
+            var cidades = [];
+            for (var c = 0; c < localidades.length; c++) {
+                cidades.push({
+                    nome: localidades[c]
+                });
+            }
             
-            $scope.cargos = titulos;
-            $scope.localidades = localidades;
+            $scope.cargos = cargos;
+            $scope.cidades = cidades;
             $scope.isLoading = false;
             
         }, function () {});
@@ -70,7 +89,7 @@
             };
             
             var resultado = [],
-                valor = $scope.filterOptions[chave];
+                valor = $scope.filtro[chave].title;
             for (var i = 0; i < $scope.jobs.length; i++) {
                 var j = $scope.jobs[i],
                     job = {
@@ -97,7 +116,14 @@
                             resultado.push(job);
                         }
                         else {
-                            resultado[index].vagas.push(vaga);
+                            var vagasExistentes = resultado[index].vagas;
+                            // so add se vaga nao foi adicionada ainda
+                            var indexVagaExistente = util.findIndex(vagasExistentes, function (v, c, r) {
+                                return v.url === vaga.url;
+                            });
+                            if (indexVagaExistente < 0) {
+                                vagasExistentes.push(vaga);
+                            }
                         }
                     }
                 }
@@ -105,16 +131,8 @@
             $scope.resultadosFiltro = resultado;
         };
 
-        $scope.filtrarPorCargo = function () {
-            _filtrar('titulo');
-        };
-
-        $scope.filtrarPorLocal = function () {
-            _filtrar('local');
-        };
-
-        $scope.filtrarPorEmpresa = function () {
-            _filtrar('empresa');
+        $scope.filtrar = function () {
+            _filtrar($scope.filtro.campo);
         };
 
     }]);
