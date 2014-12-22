@@ -3,6 +3,7 @@
 // generated on 2014-12-05 using generator-gulp-webapp 0.2.0
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
+var ga = require('gulp-ga');
 
 gulp.task('styles', function () {
   return gulp.src('app/styles/main.css')
@@ -26,6 +27,7 @@ gulp.task('html', ['styles'], function () {
     .pipe($.if('*.css', $.csso()))
     .pipe(assets.restore())
     .pipe($.useref())
+    .pipe(ga({uid: 'UA-6279200-3'}))
     .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
     .pipe(gulp.dest('dist'));
 });
